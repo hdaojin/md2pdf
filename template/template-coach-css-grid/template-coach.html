@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <title>$task | $title</title>
+    <link rel="stylesheet" href="web.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="custom.css" />
+</head>
+
+<body>
+    <header>
+        <p class="log-title">${title}</p>
+    </header>
+    <article>
+        <div class="grid-container">
+            <div id="date-key" class="grid-item">日期</div>
+            <div id="date-value" class="grid-item">${date}</div>
+            <div id="author-key" class="grid-item">教练姓名</div>
+            <div id="author-value"  class="grid-item">${author}</div>
+            <div id="task-key" class="grid-item">训练任务</div>
+            <div id="task-value" class="grid-item">${task}</div>
+            <div id="content" class="grid-item">
+                <h1>训练内容</h1>
+                <p>${content}</p>
+            </div>
+        </div>
+    </article>
+    <footer>
+        <p class="copyright">copyright&copy;2021 ITNSA by <code>Huang Daojin</code></p>
+    </footer>
+</body>
+
+</html>

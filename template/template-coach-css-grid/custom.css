@@ -1,0 +1,86 @@
+.log-title {
+    font-weight:bold; 
+    font-size:24px; 
+    text-align: center;
+    margin: 48px auto 16px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: minmax(48px, auto);
+    padding: 16px;
+}
+
+.grid-item {
+    border: 1px solid #000000;
+    /** 针对表格合并边框线的解决方案 
+    border-collapse: collapse;
+    **/
+    /** 针对grid布局合并边框线的解决方案 **/
+    margin-left: -1px;
+    margin-top: -1px;
+    padding: 16px;
+}
+
+#date-key {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    font-weight: bold;
+    text-align: center;
+}
+#date-value {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    text-align: center;
+}
+#author-key {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    font-weight: bold;
+    text-align: center;
+}
+#author-value {
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    text-align: center;
+}
+#task-key {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    font-weight: bold;
+    text-align: center;
+}
+#task-value {
+    grid-column-start: 2;
+    grid-column-end: 5;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    text-align: center;
+}
+#content {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.copyright {
+    font-size: 16px;
+    text-align: center;
+}

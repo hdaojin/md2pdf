@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <title>$task | $title</title>
+    <link rel="stylesheet" href="web.css" />
+    <link rel="stylesheet" href="custom.css" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="outside">
+        <div class="log-title">
+            <p>${title}</p>
+        </div>
+        <div class="log">
+            <table id="log-frame" class="log-frame">
+                <tr>
+                    <td class="date-key">日期</td>
+                    <td class="date-value">${date}</td>
+                    <td class="author-key">教练姓名</td>
+                    <td class="author-value">${author}</td>
+                </tr>
+                <tr>
+                    <td class="task-key">训练任务</td>
+                    <td colspan="3" class="task-value">${task}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="content">
+            ${content}
+        </div>
+        <div>
+            <p class="copyright">&copy;2021&nbsp;&nbsp;&nbsp;itnsa.cn&nbsp;&nbsp;&nbsp;Huang Daojin&nbsp;&nbsp;&nbsp;<code>Python</code> powered</p>
+        </div>
+    </div>
+</body>
+
+</html>

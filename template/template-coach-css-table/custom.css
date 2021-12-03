@@ -1,0 +1,62 @@
+body {
+    font-family: "宋体", "SimSun", "新宋体", "NSimSun", "微软雅黑", "Microsoft YaHei", "Helvetica Neue", "Helvetica", "Arial", "sans-serif",  "Times New Roman";
+}
+div.outside {
+    width: 85%;
+    margin: 0 auto;
+}
+.log-title {
+    text-align: center;
+    margin: 80px auto 32px;
+}
+.log-title p {
+    font-weight:bold; 
+    font-size: 28px; 
+    line-height: 1.2em;
+}
+
+div.log table#log-frame {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border: 1px solid rgb(0, 0, 0);
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-break: normal;
+}
+
+div.log table#log-frame tr:hover {
+    background-color: unset ;
+}
+
+
+.date-key, .date-value, .author-key, .author-value, .task-key, .task-value{
+    border: 1px solid rgb(0, 0, 0);
+    text-align: center;
+    height: 3em;
+}
+.date-key, .author-key, .task-key{
+    font-weight: bold;
+    background-color: #eee;
+}
+div.content{
+    padding: 16px;
+    margin-top: -1px;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+pre code{
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.copyright {
+    font-size: 16px;
+    font-family: "Times New Roman";
+    text-align: center;
+}
