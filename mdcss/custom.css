@@ -1,0 +1,13 @@
+body {
+    font-family: "宋体", "SimSun", "新宋体", "NSimSun", "微软雅黑", "Microsoft YaHei", "Helvetica Neue", "Helvetica", "Arial", "sans-serif",  "Times New Roman";
+}
+
+pre code{
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
