@@ -1,14 +1,14 @@
 div.outside {
-    width: 85%;
+    width: 100%;
     margin: 0 auto;
 }
 .log-title {
     text-align: center;
-    margin: 80px auto 32px;
+    margin: 32px auto;
 }
 .log-title p {
     font-weight:bold; 
-    font-size: 28px; 
+    font-size: 26px; 
     line-height: 1.2em;
 }
 

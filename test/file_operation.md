@@ -203,6 +203,7 @@ readline()方法用于在文件中读取一整行，就是从文件指针的位�
 ...     print(each_line)
 
 ```
+
 ```python
 # 打开文件
 fo = open("example.md", "r",encoding="utf8")
