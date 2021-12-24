@@ -68,7 +68,9 @@ def md2html(md_file, template, markdown_css, custom_css, code_highlight_css):
         html = markdown2.markdown(mf.read(), extras=extensions)
         title = html.metadata['Title']
         author = html.metadata['Author']
+        role = html.metadata['Role']
         date = html.metadata['Date']
+        subject = html.metadata['Subject']
         task = html.metadata['Task']
     with open(template_path, 'r', encoding="utf-8") as tf:
         template_html = Template(tf.read())
@@ -79,13 +81,15 @@ def md2html(md_file, template, markdown_css, custom_css, code_highlight_css):
             template_css=template_css, 
             title=title, 
             author=author, 
+            role=role,
             date=date, 
+            subject=subject,
             task=task, 
             content=html)
     html_file = os.path.join(md_file_dir, html_file_name)
     with open(html_file, 'w', encoding="utf-8") as hf:
         hf.write(full_html)
-    return html_file, css_dir
+    return title, author, role, date, subject, task, html_file, css_dir
 
 
 def html2pdf(html_file, pdf_file):
@@ -129,7 +133,7 @@ def get_args():
         sys.exit(1)
     if not output_dir.is_dir():
         output_dir.mkdir()
-    if template not in get_sections():
+    if template not in get_sections() and template != 'DEFAULT':
         print('Warnning: template \'{}\' not found, use \'DEFAULT\''.format(template))
         template = 'DEFAULT'
     return md_file, output_dir, template
@@ -137,10 +141,11 @@ def get_args():
 if __name__ == '__main__':
     md_file, output_dir, template = get_args()
     template, markdown_css, custom_css, code_highlight_css, generate_html, generate_pdf = get_config(template)
-    html_file, css_dir = md2html(md_file, template, markdown_css, custom_css, code_highlight_css)
+    title, author, role, date, subject, task, html_file, css_dir = md2html(md_file, template, markdown_css, custom_css, code_highlight_css)
 
     if generate_pdf == True:
-        pdf_file_name = md_file.name.replace('.md', '.pdf')
+        # pdf_file_name = md_file.name.replace('.md', '.pdf')
+        pdf_file_name = role + '-' + title + '-' + date + '-' + author + '-' + subject + '.pdf'
         pdf_file = os.path.join(output_dir, pdf_file_name)
         html2pdf(html_file=html_file, pdf_file=pdf_file)
 

@@ -1,7 +1,9 @@
 ---
-Title:        第46届世界技能大赛网络系统管理项目精英班训练日志(教练)
+Title:        第46届世界技能大赛网络系统管理项目精英班训练日志
 Author:    黄道金
+Role:  教练
 Date:        2021.10.03
+Subject:    Python
 Task:        Python文件操作
 ---
 
