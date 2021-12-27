@@ -95,15 +95,23 @@ def md2html(md_file, template, markdown_css, custom_css, code_highlight_css):
 def html2pdf(html_file, pdf_file):
     options = {
         'encoding': "UTF-8",
-        'margin-top': '0.75in',
-        'margin-right': '0.75in',
-        'margin-bottom': '0.75in',
-        'margin-left': '0.75in',
+        'margin-top': '15mm',
+        'margin-right': '15mm',
+        'margin-bottom': '15mm',
+        'margin-left': '15mm',
         'page-size': 'A4',
         'custom-header': [
             ('Accept-Encoding', 'gzip')
         ],
-        'no-outline': None,
+        'cookie': [
+            ('cookie-empty-value', '""'),
+            ('cookie-name1', 'cookie-value1'),
+            ('cookie-name2', 'cookie-value2'),
+        ],
+        'footer-font-size': '6',
+        'footer-font-name': 'Times-Roman',
+        'footer-center': '[page]/[topage]',
+        'footer-spacing': '5',
         'enable-local-file-access': None
     }
     pdfkit.from_file(html_file, pdf_file, options=options)
@@ -120,12 +128,18 @@ def get_args():
                         help='select a HTML template: {}\n(default: %(default)s)'.format(get_sections()))
     parser.add_argument('-i', required=True,
                         metavar='markdown_file', help='input a markdown file')
+    # parser.add_argument('-o', metavar='directory',
+    #                    default='.', help='output directory\n(default: The directory where markdown file is located)')
     parser.add_argument('-o', metavar='directory',
-                        default='.', help='output directory\n(default: current directory)')
+                        help='output directory\n(default: The directory where markdown file is located)')
     args = parser.parse_args()
 
     md_file = Path(args.i)
-    output_dir = Path(args.o)
+    if not args.o:
+        output_dir = md_file.resolve().parent
+    else:
+        output_dir = args.o
+    output_dir = Path(output_dir)
     template = args.template
 
     if not md_file.is_file():
