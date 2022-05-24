@@ -5,12 +5,13 @@
     <meta charset="utf-8" />
     <title>${task} | ${subject} | ${title}</title>
     <link rel="stylesheet" href="${markdown_css}" />
-    <link rel="stylesheet" href="${custom_css}" />
+    <link rel="stylesheet" href="${markdown_custom_css}" />
     <link rel="stylesheet" href="${template_css}" />
+    <!-- <link rel="stylesheet" href="template.css" /> -->
     <link rel="stylesheet" href="${code_highlight_css}" />
 </head>
 
-<body>
+<body class="line-numbers">
     <div class="outside">
         <div class="log-title">
             <p>${title}(${role})</p>
@@ -33,11 +34,16 @@
             ${content}
         </div>
         <div class="copyright">
-            <p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可。</p>
+            <p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议"
+                        style="border-width:0"
+                        src="https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png" /></a><br />本作品采用<a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可。</p>
             <p><code>Python with markdown2/pdfkit(wkhtmltopdf)/pygments</code> powered</p>
-            <p>This work &copy; 2021 by <a href="https://github.com/hdaojin">hdaojin</a> <a href="https://itnsa.cn">itnsa</a></p>
+            <p>This work &copy; 2021 by <a href="https://github.com/hdaojin">hdaojin</a> <a
+                    href="https://itnsa.cn">itnsa</a></p>
         </div>
     </div>
+    <script src="${code_highlight_js}"></script>
 </body>
 
 </html>

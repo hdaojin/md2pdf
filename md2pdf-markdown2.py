@@ -2,6 +2,10 @@
 # Author: Hdaojin
 # Date: 2021-12-05
 # Update: 2021-12-05
+__version__ = 1.0
+__author__ = 'Hdaojin'
+__date__ = '2021-12-05'
+
 import markdown2
 from configparser import ConfigParser
 import argparse
@@ -16,25 +20,24 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
 
-Version = 1.0
 
-template_dir = 'template'
-template_file_name = 'template.html'
-template_file_css = 'template.css'
-mdcss_dir = 'css'
-config_file = 'config.ini'
+TEMPLATE_DIR = 'template'
+TEMPLATE_FILE_NAME = 'template.html'
+TEMPLATE_FILE_CSS = 'template.css'
+MDCSS_DIR = 'css'
+CONFIG_FILE = 'config.ini'
 
 
 def get_sections():
     cfg = ConfigParser()
-    cfg.read(config_file)
+    cfg.read(CONFIG_FILE)
     sections = cfg.sections()
     return sections
 
 
 def get_config(section):
     cfg = ConfigParser()
-    cfg.read(config_file)
+    cfg.read(CONFIG_FILE)
     template = cfg.get(section, 'Template')
     markdown_css = cfg.get(section, 'Markdown_css')
     custom_css = cfg.get(section, 'Custom_css')
@@ -45,12 +48,13 @@ def get_config(section):
 
 
 def md2html(md_file, template, markdown_css, custom_css, code_highlight_css):
-    extensions = ['metadata', 'tables', 'code-friendly', 'fenced-code-blocks', 'break-on-newline']
-    markdown_css_path = os.path.join(mdcss_dir, markdown_css)
-    custom_css_path = os.path.join(mdcss_dir, custom_css)
-    code_highlight_css_path = os.path.join(mdcss_dir, code_highlight_css)
-    template_css_path = os.path.join(template_dir, template, template_file_css)
-    template_path = os.path.join(template_dir, template, template_file_name)
+    extensions = ['metadata', 'tables', 'code-friendly',
+                  'fenced-code-blocks', 'break-on-newline', 'footnotes']
+    markdown_css_path = os.path.join(MDCSS_DIR, markdown_css)
+    custom_css_path = os.path.join(MDCSS_DIR, custom_css)
+    code_highlight_css_path = os.path.join(MDCSS_DIR, code_highlight_css)
+    template_css_path = os.path.join(TEMPLATE_DIR, template, TEMPLATE_FILE_CSS)
+    template_path = os.path.join(TEMPLATE_DIR, template, TEMPLATE_FILE_NAME)
     md_file_dir = md_file.parent
     html_file_name = md_file.stem + '.html'
 
@@ -62,8 +66,8 @@ def md2html(md_file, template, markdown_css, custom_css, code_highlight_css):
     markdown_css = os.path.join('css', markdown_css)
     custom_css = os.path.join('css', custom_css)
     code_highlight_css = os.path.join('css', code_highlight_css)
-    template_css = os.path.join('css', template_file_css)
-    
+    template_css = os.path.join('css', TEMPLATE_FILE_CSS)
+
     with open(md_file, 'r', encoding="utf-8") as mf:
         html = markdown2.markdown(mf.read(), extras=extensions)
         title = html.metadata['Title']
@@ -75,16 +79,16 @@ def md2html(md_file, template, markdown_css, custom_css, code_highlight_css):
     with open(template_path, 'r', encoding="utf-8") as tf:
         template_html = Template(tf.read())
         full_html = template_html.safe_substitute(
-            markdown_css=markdown_css, 
-            custom_css=custom_css, 
-            code_highlight_css=code_highlight_css, 
-            template_css=template_css, 
-            title=title, 
-            author=author, 
+            markdown_css=markdown_css,
+            custom_css=custom_css,
+            code_highlight_css=code_highlight_css,
+            template_css=template_css,
+            title=title,
+            author=author,
             role=role,
-            date=date, 
+            date=date,
             subject=subject,
-            task=task, 
+            task=task,
             content=html)
     html_file = os.path.join(md_file_dir, html_file_name)
     with open(html_file, 'w', encoding="utf-8") as hf:
@@ -120,10 +124,10 @@ def html2pdf(html_file, pdf_file):
 
 def get_args():
     parser = argparse.ArgumentParser(
-        description="Markdown file coverted to html and pdf file with python-markdown2 and wkhtmltopdf", 
+        description="Markdown file coverted to html and pdf file with python-markdown2 and wkhtmltopdf",
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-v', '--version', action='version',
-                        version='%(prog)s {}'.format(str(Version)))
+                        version='%(prog)s {}'.format(str(__version__)))
     parser.add_argument('-t', '--template', required=False, nargs='?', const='DEFAULT', default='DEFAULT',
                         help='select a HTML template: {}\n(default: %(default)s)'.format(get_sections()))
     parser.add_argument('-i', required=True,
@@ -152,14 +156,18 @@ def get_args():
         template = 'DEFAULT'
     return md_file, output_dir, template
 
+
 if __name__ == '__main__':
     md_file, output_dir, template = get_args()
-    template, markdown_css, custom_css, code_highlight_css, generate_html, generate_pdf = get_config(template)
-    title, author, role, date, subject, task, html_file, css_dir = md2html(md_file, template, markdown_css, custom_css, code_highlight_css)
+    template, markdown_css, custom_css, code_highlight_css, generate_html, generate_pdf = get_config(
+        template)
+    title, author, role, date, subject, task, html_file, css_dir = md2html(
+        md_file, template, markdown_css, custom_css, code_highlight_css)
 
     if generate_pdf == True:
-        # pdf_file_name = md_file.name.replace('.md', '.pdf')
-        pdf_file_name = role + '-' + title + '-' + date + '-' + author + '-' + subject + '.pdf'
+        pdf_file_name = md_file.name.replace('.md', '.pdf')
+        # pdf_file_name = role + '-' + title + '-' + \
+        #     date + '-' + author + '-' + subject + '.pdf'
         pdf_file = os.path.join(output_dir, pdf_file_name)
         html2pdf(html_file=html_file, pdf_file=pdf_file)
 
