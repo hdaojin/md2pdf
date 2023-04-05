@@ -21,10 +21,10 @@ from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
 
 
-TEMPLATE_DIR = 'template'
+TEMPLATE_DIR = Path('template')
 TEMPLATE_FILE_NAME = 'template.html'
 TEMPLATE_FILE_CSS = 'template.css'
-MDCSS_DIR = 'css'
+MDCSS_DIR = Path('styles')
 CONFIG_FILE = 'config.ini'
 
 
@@ -38,12 +38,12 @@ def get_sections():
 def get_config(section):
     cfg = ConfigParser()
     cfg.read(CONFIG_FILE)
-    template = cfg.get(section, 'Template')
-    markdown_css = cfg.get(section, 'Markdown_css')
-    custom_css = cfg.get(section, 'Custom_css')
-    code_highlight_css = cfg.get(section, 'Code_highlight_css')
-    generate_html = cfg.getboolean(section, 'Generate_html')
-    generate_pdf = cfg.getboolean(section, 'Generate_pdf')
+    template = cfg.get(section, 'template_name')
+    markdown_css = cfg.get(section, 'markdown_css')
+    custom_css = cfg.get(section, 'markdown_custom_css')
+    code_highlight_css = cfg.get(section, 'code_highlight_css')
+    generate_html = cfg.getboolean(section, 'generate_html')
+    generate_pdf = cfg.getboolean(section, 'generate_pdf')
     return template, markdown_css, custom_css, code_highlight_css, generate_html, generate_pdf
 
 
@@ -70,7 +70,7 @@ def md2html(md_file, template, markdown_css, custom_css, code_highlight_css):
 
     with open(md_file, 'r', encoding="utf-8") as mf:
         html = markdown2.markdown(mf.read(), extras=extensions)
-        title = html.metadata['Title']
+        title = html.metadata['Head']
         author = html.metadata['Author']
         role = html.metadata['Role']
         date = html.metadata['Date']
@@ -165,9 +165,10 @@ if __name__ == '__main__':
         md_file, template, markdown_css, custom_css, code_highlight_css)
 
     if generate_pdf == True:
-        pdf_file_name = md_file.name.replace('.md', '.pdf')
+        # pdf_file_name = md_file.name.replace('.md', '.pdf')
         # pdf_file_name = role + '-' + title + '-' + \
         #     date + '-' + author + '-' + subject + '.pdf'
+        pdf_file_name = '-'.join([role, title, date, author, subject]) + '.pdf'
         pdf_file = os.path.join(output_dir, pdf_file_name)
         html2pdf(html_file=html_file, pdf_file=pdf_file)
 

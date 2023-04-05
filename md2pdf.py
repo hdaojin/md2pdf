@@ -168,8 +168,6 @@ if __name__ == '__main__':
 
     if generate_pdf == True:
         pdf_file_name = md_file.name.replace('.md', '.pdf')
-        # pdf_file_name = role + '-' + title + '-' + \
-        #     date + '-' + author + '-' + subject + '.pdf'
         pdf_file = os.path.join(output_dir, pdf_file_name)
         html2pdf(html_file=html_file, pdf_file=pdf_file)
 
