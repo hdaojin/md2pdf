@@ -26,12 +26,12 @@ div.log table#log-frame tr:hover {
     background-color: unset ;
 }
 
-.date-key, .date-value, .author-key, .author-value, .task-key, .task-value{
+.key, .value{
     border: 1px solid rgb(0, 0, 0);
     text-align: center;
     height: 3em;
 }
-.date-key, .author-key, .task-key{
+.key{
     font-weight: bold;
     background-color: #eee;
 }
