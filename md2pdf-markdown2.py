@@ -1,5 +1,5 @@
 """
-Description: Markdown file coverted to html and pdf file with python-markdown2 and wkhtmltopdf
+Description: Markdown file coverted to html and pdf file with mistune and wkhtmltopdf
 Author: hdaojin
 Date: 2021-12-05
 Update: 2023-10-10
@@ -12,10 +12,13 @@ from pathlib import Path
 from shutil import copy, rmtree
 from string import Template
 from configparser import ConfigParser
+import asyncio
 
-import pdfkit
-import markdown2
 import click
+import mistune, frontmatter
+from playwright.async_api import async_playwright
+
+
 
 # from pygments import highlight
 # from pygments.lexers import PythonLexer
@@ -58,10 +61,23 @@ def get_config(section):
 
 # Convert markdown file to html file.
 def md2html(md_file, output_dir, config):
-    markdown_css_path = STYLES_DIR / config["markdown_css"]
-    markdown_custom_css_path = STYLES_DIR / config["markdown_custom_css"]
+    # style_files = [
+    #     markdown_css_path = STYLES_DIR / config["markdown_css"],
+    #     markdown_custom_css_path = STYLES_DIR / config["markdown_custom_css"],
+    #     highlight_css_path = STYLES_DIR / config["highlight_css"],
+    #     highlight_js_path = STYLES_DIR / config["highlight_js"],
+    #     template_path = TEMPLATE_DIR / config["template_name"] / TEMPLATE_FILE_NAME,
+    #     template_css_path = TEMPLATE_DIR / config["template_name"] / TEMPLATE_FILE_CSS,
+    # ]
+    style_files_path = [
+        STYLES_DIR / config["markdown_css"],
+        STYLES_DIR / config["markdown_custom_css"],
+        STYLES_DIR / config["highlight_css"],
+        STYLES_DIR / config["highlight_js"],
+        TEMPLATE_DIR / config["template_name"] / TEMPLATE_FILE_CSS,
+    ]
+
     template_path = TEMPLATE_DIR / config["template_name"] / TEMPLATE_FILE_NAME
-    template_css_path = TEMPLATE_DIR / config["template_name"] / TEMPLATE_FILE_CSS
 
     md_file_dir = md_file.parent
     styles_dir = md_file_dir / "styles"
@@ -70,57 +86,50 @@ def md2html(md_file, output_dir, config):
     if not Path.exists(styles_dir):
         Path.mkdir(styles_dir)
 
-    for style_file in markdown_css_path, markdown_custom_css_path, template_css_path:
+    for style_file in style_files_path:
         copy(style_file, styles_dir)
 
-    extensions = [
-        "metadata",
-        "tables",
-        "code-friendly",
-        "fenced-code-blocks",
-        "break-on-newline",
-        "footnotes",
-    ]
+    # Convert markdown to html using mistune and frontmatter
+    # Frontmatter is used to extract metadata from markdown file which is in the format like this:
+    # ---
+    # document: "Document"
+    # date: "2021-12-05"
+    # tags: ["tag1", "tag2"]
+    # ---
+    # mistune is used to convert markdown to html, it is a fast and extensible markdown parser in pure Python.
 
     with open(md_file, "r", encoding="utf-8") as mf:
-        html = markdown2.markdown(mf.read(), extras=extensions)
-        meta_data = html.metadata
-        meta_data = {k.lower(): v for k, v in meta_data.items()}
+        md = mf.read()
+        md_meta, md_content = frontmatter.parse(md)
+        md_meta = {k.lower(): v for k, v in md_meta.items()}
+        html = mistune.html(md_content)
+
 
     with open(template_path, "r", encoding="utf-8") as tf:
         template_html = Template(tf.read())
-        d = {**config, **meta_data}
+        d = {**config, **md_meta}
         full_html = template_html.safe_substitute(d, content=html)
 
     with open(html_file, "w", encoding="utf-8") as hf:
         hf.write(full_html)
 
-    return html_file, styles_dir, meta_data
+    return html_file, styles_dir, md_meta
 
 
 # Convert html file to pdf file.
-def html2pdf(html_file, pdf_file):
-    options = {
-        "encoding": "UTF-8",
-        "margin-top": "15mm",
-        "margin-right": "15mm",
-        "margin-bottom": "15mm",
-        "margin-left": "15mm",
-        "page-size": "A4",
-        "custom-header": [("Accept-Encoding", "gzip")],
-        "cookie": [
-            ("cookie-empty-value", '""'),
-            ("cookie-name1", "cookie-value1"),
-            ("cookie-name2", "cookie-value2"),
-        ],
-        "footer-font-size": "6",
-        "footer-font-name": "Times-Roman",
-        "footer-center": "[page]/[topage]",
-        "footer-spacing": "5",
-        "enable-local-file-access": None,
-    }
-    pdfkit.from_file(html_file, pdf_file, options=options)
-    return
+async def html2pdf(html_file, pdf_file):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True, executable_path=conf
+        page = await browser.new_page()
+        await page.goto(html_file)
+        await page.pdf(
+            path=pdf_file,
+            format="A4",
+            margin=dict(top="15mm", right="15mm", bottom="15mm", left="15mm"),
+        )
+        await browser.close()
+        return
+
 
 
 # Get parameters from the command line using click
@@ -167,7 +176,7 @@ def main(template, md_file, output_dir):
         meta_data["date"],
         meta_data["author"],
         meta_data["subject"],
-        meta_data["task"],
+        meta_data["task"].replace(" ", "-")
     ]
     # pdf_file = output_dir / ('-'.join(name_parts) + '.pdf')
     pdf_file = os.path.join(output_dir, "-".join(name_parts) + ".pdf")

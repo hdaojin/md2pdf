@@ -10,10 +10,10 @@ pre code{
     word-break: break-word !important;
 }
 
-img {
+/* img {
     max-width: 100%;
     height: auto;
-}
+} */
 
 /* auto-number-title */
 /* h1 { counter-reset: h2counter; }

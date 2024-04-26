@@ -35,10 +35,11 @@ div.log table#log-frame tr:hover {
     font-weight: bold;
     background-color: #eee;
 }
-div.content{
+.content{
     padding: 16px;
-    margin-top: -1px;
+    /* margin-top: -1px; */
     border: 1px solid rgb(0, 0, 0);
+    border-top: none;
 }
 
 .copyright {

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles/${markdown_css}" />
     <link rel="stylesheet" href="styles/${markdown_custom_css}" />
     <link rel="stylesheet" href="styles/${template_css}" />
+    <link rel="stylesheet" href="${highlight_css}" />
 </head>
 
 <body>
@@ -17,22 +18,22 @@
         <div class="log">
             <table id="log-frame" class="log-frame">
                 <tr>
-                    <td class="key">日期</td>
+                    <th class="key">日期</th>
                     <td class="value">${date}</td>
-                    <td class="key">教练姓名</td>
+                    <th class="key">教练姓名</th>
                     <td class="value">${author}</td>
-                    <td class="key">模块</td>
+                    <th class="key">模块</th>
                     <td class="value">${subject}</td>
                 </tr>
                 <tr>
-                    <td class="key">训练任务</td>
+                    <th class="key">训练任务</th>
                     <td colspan="5" class="value">${task}</td>
                 </tr>
             </table>
         </div>
-        <div class="content">
+        <article class="content markdown-body">
             ${content}
-        </div>
+        </article>
         <!-- <div class="copyright">
             <p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议"
                         style="border-width:0"
@@ -43,7 +44,7 @@
                     href="https://itnsa.cn">itnsa</a></p>
         </div> -->
     </div>
-    <!-- <script src="${code_highlight_js}"></script> -->
+    <script src="${highlight_js}"></script>
 </body>
 
 </html>
