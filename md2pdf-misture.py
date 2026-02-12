@@ -120,29 +120,43 @@ def md2html(md_file, output_dir, template):
 # Convert html to pdf using playwright
 async def html2pdf(html_file, output_dir):
     pdf_file = output_dir / (html_file.stem + ".pdf")
-    print_pdf_browser = parse_config()["print_pdf_browser"]
-    print_pdf_browser_path = parse_config()["print_pdf_browser_path"]
-    async with async_playwright() as p:
-        if print_pdf_browser == "chromium":
-            browser = await p.chromium.launch(headless=True, executable_path=print_pdf_browser_path)
-        elif print_pdf_browser == "firefox":
-            browser = await p.firefox.launch(headless=True, executable_path=print_pdf_browser_path)
-        elif print_pdf_browser == "webkit":
-            browser = await p.webkit.launch(headless=True, executable_path=print_pdf_browser_path)
-        else:
-            print("Invalid browser")
-            sys.exit(1)
+    config = parse_config()
+    try:
+        print_pdf_browser = config["DEFAULT"]["print_pdf_browser"]
+        print_pdf_browser_path = config["DEFAULT"]["print_pdf_browser_path"]
+    except KeyError:
+        print("配置文件中缺少必要的PDF打印配置")
+        sys.exit(1)
+        
+    try:
+        async with async_playwright() as p:
+            if print_pdf_browser == "chromium":
+                browser = await p.chromium.launch(headless=True, executable_path=print_pdf_browser_path if print_pdf_browser_path else None)
+            elif print_pdf_browser == "firefox":
+                browser = await p.firefox.launch(headless=True, executable_path=print_pdf_browser_path if print_pdf_browser_path else None)
+            elif print_pdf_browser == "webkit":
+                browser = await p.webkit.launch(headless=True, executable_path=print_pdf_browser_path if print_pdf_browser_path else None)
+            else:
+                print(f"无效的浏览器选项: {print_pdf_browser}")
+                sys.exit(1)
 
-        page = await browser.new_page()
-        await page.goto(html_file.as_uri())
-        await page.pdf(
-            path=pdf_file, 
-            format="A4",
-            margin={"top": "1mm", "bottom": "1.5cm", "left": "1cm", "right": "1cm"},
-            printBackground=True
-            )
-        await browser.close()
-    return
+            try:
+                page = await browser.new_page()
+                await page.goto(html_file.as_uri())
+                # 等待页面完成加载
+                await page.wait_for_load_state("networkidle")
+                
+                await page.pdf(
+                    path=pdf_file, 
+                    format="A4",
+                    margin={"top": "1mm", "bottom": "1.5cm", "left": "1cm", "right": "1cm"},
+                    printBackground=True
+                )
+            finally:
+                await browser.close()
+    except Exception as e:
+        print(f"生成PDF时出错: {e}")
+        sys.exit(1)
 
 # Main function
 def main():
@@ -155,4 +169,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-        
+
